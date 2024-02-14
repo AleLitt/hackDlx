@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Simple Website</title>
+</head>
+<body>
+    <h1>Information from Backend:</h1>
+    <div id="info">Loading...</div>
+
+    <script>
+        async function fetchInfo() {
+            try {
+                const response = await fetch('http://localhost:5000/info');
+                const data = await response.json();
+                document.getElementById('info').innerText = data.message;
+            } catch (error) {
+                console.error('Error fetching info:', error);
+                document.getElementById('info').innerText = 'Failed to load info.';
+            }
+        }
+
+        // Fetch the information when the page loads
+        window.onload = fetchInfo;
+    </script>
+</body>
+</html>
