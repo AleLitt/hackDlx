@@ -1,1 +1,2 @@
 # hackDlx
+# Definiera lite kod
