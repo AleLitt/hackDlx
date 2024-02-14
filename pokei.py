@@ -21,7 +21,9 @@ def convert_to_ascii(image, width=100):
     new_height = int(aspect_ratio * width / 2)
     resized_image = image.resize((width, new_height))
     
-    ascii_chars = "@%#*+=-:. "
+    ascii_chars = " .:-=+*#%@"
+
+
     ascii_str = ""
     for y in range(new_height):
         for x in range(width):
