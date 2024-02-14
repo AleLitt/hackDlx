@@ -2,26 +2,26 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Simple Website</title>
+    <title>Trump Quote Fetcher</title>
 </head>
 <body>
-    <h1>Information from Backend:</h1>
-    <div id="info">Loading...</div>
+    <h1>Random Trump Quote:</h1>
+    <div id="quote">Loading...</div>
 
     <script>
-        async function fetchInfo() {
+        async function fetchTrumpQuote() {
             try {
-                const response = await fetch('http://localhost:5000/info');
+                const response = await fetch('http://localhost:5000/trump-quote');
                 const data = await response.json();
-                document.getElementById('info').innerText = data.message;
+                document.getElementById('quote').innerText = data.quote;
             } catch (error) {
-                console.error('Error fetching info:', error);
-                document.getElementById('info').innerText = 'Failed to load info.';
+                console.error('Error fetching quote:', error);
+                document.getElementById('quote').innerText = 'Failed to load quote.';
             }
         }
 
-        // Fetch the information when the page loads
-        window.onload = fetchInfo;
+        // Fetch the quote when the page loads
+        window.onload = fetchTrumpQuote;
     </script>
 </body>
 </html>
