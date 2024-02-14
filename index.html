@@ -1,27 +1,31 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Trump Quote Fetcher</title>
-</head>
-<body>
-    <h1>Random Trump Quote:</h1>
-    <div id="quote">Loading...</div>
-
-    <script>
-        async function fetchTrumpQuote() {
-            try {
-                const response = await fetch('http://localhost:5000/trump-quote');
-                const data = await response.json();
-                document.getElementById('quote').innerText = data.quote;
-            } catch (error) {
-                console.error('Error fetching quote:', error);
-                document.getElementById('quote').innerText = 'Failed to load quote.';
+<script>
+    $(document).ready(function() {
+        $('#terminal').terminal(function(command, term) {
+            if (command === 'quote') {
+                // Fetching a random quote
+                $.getJSON('/random-quote', function(data) {
+                    term.echo(`${data.source} says: "${data.quote}"`);
+                }).fail(function() {
+                    term.error('Failed to retrieve quote');
+                });
+            } else if (command !== '') {
+                try {
+                    var result = window.eval(command);
+                    if (result !== undefined) {
+                        term.echo(String(result));
+                    }
+                } catch(e) {
+                    term.error(String(e));
+                }
+            } else {
+                term.echo('');
             }
-        }
-
-        // Fetch the quote when the page loads
-        window.onload = fetchTrumpQuote;
-    </script>
-</body>
-</html>
+        }, {
+            greetings: 'Welcome to My Terminal Website!\nType "quote" to get a random Trump or Kanye quote.',
+            name: 'Terminal',
+            height: 200,
+            prompt: 'user@website:~$ ',
+            exit: false
+        });
+    });
+</script>

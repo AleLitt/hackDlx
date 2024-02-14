@@ -1,41 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Terminal Website</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.terminal/2.19.0/css/jquery.terminal.min.css">
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.terminal/2.19.0/js/jquery.terminal.min.js"></script>
-<style>
-    body {
-        font-family: 'Courier New', Courier, monospace;
-        background-color: black;
-        color: white;
-        margin: 0;
-        padding: 0;
-        height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    #terminal {
-        width: 80%; /* Adjust the width as needed */
-        height: 60vh; /* Adjust the height as needed */
-        max-width: 1000px;
-        max-height: 600px;
-        overflow: auto;
-    }
-</style>
-</head>
-<body>
-
-<div id="terminal"></div>
-
 <script>
     $(document).ready(function() {
         $('#terminal').terminal(function(command, term) {
-            if (command !== '') {
+            if (command === 'quote') {
+                // Fetching a random quote
+                $.getJSON('/random-quote', function(data) {
+                    term.echo(`${data.source} says: "${data.quote}"`);
+                }).fail(function() {
+                    term.error('Failed to retrieve quote');
+                });
+            } else if (command !== '') {
                 try {
                     var result = window.eval(command);
                     if (result !== undefined) {
@@ -48,7 +21,7 @@
                 term.echo('');
             }
         }, {
-            greetings: 'Welcome to My Terminal Website!',
+            greetings: 'Welcome to My Terminal Website!\nType "quote" to get a random Trump or Kanye quote.',
             name: 'Terminal',
             height: 200,
             prompt: 'user@website:~$ ',
@@ -56,6 +29,3 @@
         });
     });
 </script>
-
-</body>
-</html>
