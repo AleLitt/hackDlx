@@ -1,7 +1,9 @@
 const express = require('express');
-const fetch = require('node-fetch');
+// Dynamically import node-fetch as an ES module
+const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
+
 const app = express();
-const PORT = 5000;
+const PORT = 5001;
 
 async function getTrumpQuote() {
     try {

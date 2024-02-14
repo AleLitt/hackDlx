@@ -7,6 +7,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.terminal/2.19.0/css/jquery.terminal.min.css">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.terminal/2.19.0/js/jquery.terminal.min.js"></script>
+<script src="app.js"></script>
 <script src="commands.js"></script> <!-- Include the commands.js file -->
 <style>
     body {
@@ -35,11 +36,14 @@
 <div id="terminal"></div>
 
 <script>
+
+    fetch('http://localhost:5001/random-quote').then(res => res.json()).then(data => console.log(data))
+
     $(document).ready(function() {
         $('#terminal').terminal(function(command, term) {
             if (command === 'quote') {
                 // Fetching a random quote
-                $.getJSON('/random-quote', function(data) {
+                $.getJSON('http://localhost:5001/random-quote', function(data) {
                     term.echo(`${data.source} says: "${data.quote}"`);
                 }).fail(function() {
                     term.error('Failed to retrieve quote');

@@ -1,31 +1,74 @@
-<script>
-    $(document).ready(function() {
-        $('#terminal').terminal(function(command, term) {
-            if (command === 'quote') {
-                // Fetching a random quote
-                $.getJSON('/random-quote', function(data) {
-                    term.echo(`${data.source} says: "${data.quote}"`);
-                }).fail(function() {
-                    term.error('Failed to retrieve quote');
-                });
-            } else if (command !== '') {
-                try {
-                    var result = window.eval(command);
-                    if (result !== undefined) {
-                        term.echo(String(result));
-                    }
-                } catch(e) {
-                    term.error(String(e));
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Quote Terminal</title>
+    <style>
+        body {
+            background-color: #333;
+            color: #fff;
+            font-family: monospace;
+        }
+        #terminal {
+            width: 80%;
+            max-width: 600px;
+            margin: 20px auto;
+            border: 2px solid #555;
+            padding: 10px;
+        }
+        #output {
+            white-space: pre-wrap; /* Ensures text wraps */
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 5px;
+            background-color: #222;
+            border: none;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div id="terminal">
+        <div id="output"></div>
+        <input type="text" id="input" placeholder="Type 'quote' and press enter...">
+    </div>
+
+    <script>
+        const inputField = document.getElementById('input');
+        const outputDiv = document.getElementById('output');
+
+        // Function to fetch and display a quote
+        async function fetchAndDisplayQuote() {
+            try {
+                const response = await fetch('http://localhost:5001/random-quote');
+                if (response.ok) {
+                    const data = await response.json();
+                    outputDiv.textContent += `\n> ${data.quote} - ${data.source}`;
+                } else {
+                    outputDiv.textContent += "\n> Error fetching quote.";
                 }
-            } else {
-                term.echo('');
+            } catch (error) {
+                console.error('Failed to fetch quote:', error);
+                outputDiv.textContent += "\n> Failed to fetch quote.";
             }
-        }, {
-            greetings: 'Welcome to My Terminal Website!\nType "quote" to get a random Trump or Kanye quote.',
-            name: 'Terminal',
-            height: 200,
-            prompt: 'user@website:~$ ',
-            exit: false
+        }
+
+        inputField.addEventListener('keydown', async (e) => {
+            if (e.key === 'Enter') {
+                const command = inputField.value.trim().toLowerCase();
+                inputField.value = ''; // Clear input field
+
+                if (command === 'quote') {
+                    await fetchAndDisplayQuote();
+                } else {
+                    outputDiv.textContent += "\n> Unknown command. Type 'quote' to fetch a random quote.";
+                }
+                // Scroll to the bottom of the output
+                outputDiv.scrollTop = outputDiv.scrollHeight;
+            }
         });
-    });
-</script>
+    </script>
+</body>
+</html>
